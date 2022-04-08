@@ -22,22 +22,27 @@ def with_parameters(method, *parameter_forms):
 def _wrap_view_query_handler(handler):
     @wraps(handler)
     def wrapper(request):
-        custom_get_parameters = getattr(handler, "custom_parameters", {}).get("get", [])
+        custom_parameters = getattr(handler, "custom_parameters", {})
+        custom_get_parameters = custom_parameters.get("get", [])
+        custom_post_parameters = custom_parameters.get("post", [])
 
         request.GET.current_user = request.user
 
-        get_parameters_filled_forms = [
+        filled_forms = [
             parameter_form_definition(data=request.GET)
             for parameter_form_definition in custom_get_parameters
+        ] + [
+            parameter_form_definition(data=request.data)
+            for parameter_form_definition in custom_post_parameters
         ]
 
-        if not all(form.is_valid() for form in get_parameters_filled_forms):
+        if not all(form.is_valid() for form in filled_forms):
             errors = {}
-            for form in get_parameters_filled_forms:
+            for form in filled_forms:
                 errors.update(form.errors)
             raise ValidationError(detail=errors)
 
-        parameters_values = [form.clean() for form in get_parameters_filled_forms]
+        parameters_values = [form.clean() for form in filled_forms]
         result = handler(request, *parameters_values)
         return Response(result) if not isinstance(result, HttpResponse) else result
 
