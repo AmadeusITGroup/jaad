@@ -33,6 +33,8 @@ def run_command(command, force):
         print("Run django-admin collectstatic")
     elif command == "add-uwsgi":
         copy_from_template("add-uwsgi", force)
+    elif command == "add-docker":
+        copy_from_template("add-docker", force)
     else:
         raise ValueError(f"Unrecognized command {command}")
 
@@ -72,7 +74,7 @@ def copy_from_template(template_name, force, dry_run=False):
 def main() -> int:
     parser = argparse.ArgumentParser(description="")
     parser.add_argument(
-        "commands", choices=["startproject", "add-doc", "add-uwsgi"], nargs="+"
+        "commands", choices=["startproject", "add-doc", "add-uwsgi", "add-docker"], nargs="+"
     )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
