@@ -43,7 +43,7 @@ def copy_from_template(template_name, force, dry_run=False):
         copy_from_template(template_name, force, dry_run=True)
     command_template_dir = op.join(TEMPLATE_FOLDER, template_name)
     for path, directories, files in os.walk(command_template_dir):
-        rel_path = path[len(command_template_dir) + 1 :]
+        rel_path = path[len(command_template_dir) + 1:]
         for directory in directories:
             destination = op.join(PROJECT_DIR, rel_path, directory)
             if os.path.exists(destination):
