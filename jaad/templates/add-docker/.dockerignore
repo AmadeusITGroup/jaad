@@ -1,0 +1,16 @@
+# IntelliJ project files
+.idea
+*.iml
+
+# Generated files and folders
+.env*
+**.pyc
+**/__pycache__
+
+# Not wanted logs
+server/logs/
+server/static
+
+.dockerignore
+.gitignore
+Dockerfile
